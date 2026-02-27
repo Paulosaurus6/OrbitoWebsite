@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orbito – Anleitung</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #610000, #610000);
+      color: white;
+      font-size: 1.8rem;
+    }
+
+    .slides {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .double-image-slide {
+  position: relative;
+}
+
+.double-image-slide .top-image {
+  position: relative;
+  width: 100%;        
+  max-width: 450px;   
+  display: block;
+  top: 0px;           
+  left: 15px;          
+}
+
+.double-image-slide .bottom-image {
+  position: relative;
+  width: 100%;       
+  max-width: 450px;
+  display: block;
+  margin-top: 20px;   
+  top: 0px;           
+  left: 15px;          
+}
+
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .center {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    h1 {
+      font-size: 7rem;
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
+
+    .hint {
+      font-size: 1.8rem;
+      opacity: 0.9;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      width: 100%;
+      max-width: 1200px;
+      align-items: center;
+    }
+
+    .board-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .board-wrapper img.board {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .ball {
+      position: absolute;
+      width: 15%;
+      height: auto;
+      transition: transform 0.8s ease;
+    }
+
+    .Feld-place {
+      left: 80.5%;
+      top: 80.5%;
+      width: 20%;  
+      height: 20%;  
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .Feld-change { 
+      left: 60%; 
+      top: 60%; 
+      width: 20%;  
+      height: 20%;
+      transform: translate(-50%, -50%); 
+      opacity: 1; 
+    }
+
+    .Feld-changeNO {
+      left: 80.5%;
+      top: 60%;
+      width: 21%;  
+      height: 21%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .ball-placed {
+      left: 81%;
+      top: 79%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .ball-placedB {
+      left: 51%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .arrow {
+      position: absolute;
+      left: 79%;   
+      top: 50%;
+      width: 23%;
+      transform: translateY(-50%);
+    }
+
+    .ball-rotated {
+      left: 81%;
+      top: 59%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+     .ball-rotatedE {
+      left: 81%;
+      top: 39%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    /* Neue weiße Kugel unten rechts */
+    .ball-white-new {
+      left: 81%;
+      top: 79%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .ball-black {
+      left: 81%;
+      top: 79%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .ball-blackE {
+      left: 81%;
+      top: 60%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    /* Neue finale Slide Kugeln */
+    .ball-white-final1 { left: 81%; top: 79%; transform: translate(-50%, -50%); opacity: 1; }
+    .ball-white-final2 { left: 81%; top: 59%; transform: translate(-50%, -50%); opacity: 1; }
+    .ball-white-final3 { left: 81%; top: 39%; transform: translate(-50%, -50%); opacity: 1; }
+    .ball-white-final4 { left: 81%; top: 20%; transform: translate(-50%, -50%); opacity: 1; }
+
+
+    .ball-black-final1 { left: 60%; top: 60%; transform: translate(-50%, -50%); opacity: 1; }
+    .ball-black-final2 { left: 60%; top: 39%; transform: translate(-50%, -50%); opacity: 1; }
+    .ball-black-final3 { left: 60%; top: 81%; transform: translate(-50%, -50%); opacity: 1; }
+
+    /* Schachbrett-Layout für finale Slide (szenario 1) */
+    .ball-black-1 { left: 60%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-1 { left: 81%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-whiteR-2 { left: 60%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-2 { left: 81%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-blackR-3 { left: 60%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-3 { left: 81%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-4 { left: 60%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-4 { left: 81%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-5 { left: 20%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-5 { left: 40%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-6 { left: 20%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-6 { left: 40%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-7 { left: 20%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-7 { left: 40%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-8 { left: 20%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-8 { left: 40%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+
+    /* (szenario 2) */
+    .ball-black-1S { left: 60%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-1S { left: 81%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-2S { left: 60%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-2S { left: 81%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-3S { left: 60%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-3S { left: 81%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-4S { left: 60%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-4S { left: 81%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-5S { left: 20%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-5S { left: 40%; top: 79%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-6S { left: 20%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-6S { left: 40%; top: 59%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-7S { left: 20%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-7S { left: 40%; top: 39%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-white-8S { left: 20%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+    .ball-black-8S { left: 40%; top: 20%; transform: translate(-50%, -50%); opacity:1; }
+
+  </style>
+</head>
+<body>
+
+<div class="slides">
+
+  <section class="slide center active">
+    <h1>Orbito</h1>
+    <div class="hint">zum Fortfahren klicken</div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+      </div>
+      <div class="text">
+        Das Ziel von Orbito ist es, auf diesem Spielfeld vier eigene Kugeln in eine durchgehende Linie zu bringen – horizontal, vertikal oder diagonal.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="player_panel_s.png" 
+           alt="Erklärgrafik" 
+           style="
+             width: 100%;
+             max-width: 450px;
+             height: auto;
+             display: block;
+           " />
+        <img src="amZug_w.png" 
+          alt="Pfeil" 
+          class="arrow" />
+        </div>
+        <div class="text">
+        Der Pfeil zeigt an, welcher Spieler am Zug ist. Die Farbe unter dem Namen das Spielers ist die Farbe, mit der er Speilt.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="Feld_Place.png" class="ball Feld-place" alt="Weiße Kugel" />
+      </div>
+      <div class="text">
+        Das Platzieren einer eigenen Kugel ist bei jedem Zug verpflichtend. Dies tut man, indem man das Feld, auf das man die Kugel legen möchte, anklickt. Verfürgbare Felder werden Hellblau markiert.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-placed" alt="Weiße Kugel" />
+      </div>
+      <div class="text">
+        Das Platzieren einer eigenen Kugel ist bei jedem Zug verpflichtend. Dies tut man, indem man das Feld, auf das man die Kugel legen möchte, anklickt. Verfürgbare Felder werden Hellblau markiert.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-placed" alt="Weiße Kugel" />
+        <img src="orbitoButton.png" class="ball ball-placedB" alt="Weiße Kugel" />
+      </div>
+      <div class="text">
+        Nach jedem Zug werden alle vorhandenen Kugeln um ein Feld gegen den Uhrzeigersinn verschoben. Dies Tut man, indem man auf den "Orbito-Knopf" in der Mitte des Spielfelds drückt.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotated" alt="Weiße Kugel" />
+      </div>
+      <div class="text">
+        Nach jedem Zug werden alle vorhandenen Kugeln um ein Feld gegen den Uhrzeigersinn verschoben. Dies Tut man, indem man auf den "Orbito-Knopf" in der Mitte des Spielfelds drückt.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotated" alt="Weiße Kugel" />
+        <img src="Feld_Place.png" class="ball Feld-place" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Als nächstes zieht der Gegner nach denselben Regeln.
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotated" alt="Weiße Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Als nächstes zieht der Gegner nach denselben Regeln.
+      </div>
+    </div>
+  </section>
+
+    <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotatedE" alt="Weiße Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-blackE" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Auch hier wird, wie immer, nach dem Zug rotiert. 
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Neue Slide: Gegnerische Kugel verschieben möglich -->
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotatedE" alt="Weiße Kugel" />
+        <img src="Feld_Change2.png" class="ball Feld-place" alt="Schwarze Kugel" />
+        <img src="Feld_Change1.png" class="ball Feld-change" alt="Schwarze Kugel" />
+        <img src="Feld_ChangeNO.png" class="ball Feld-changeNO" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Sofern Kugeln beider Farben auf dem Spielfeld liegen, hat man die Möglichkeit, eine gegnerische Kugel auf ein benachbartes Feld zu verschieben. Verfürgbare Felder werden Hellblau markiert, die Kugel, umd die es geht Dunkelblau.
+      </div>
+    </div>
+  </section>
+
+  <!-- Neue Slide: Schwarze Kugel wird nach links verschoben -->
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotatedE" alt="Weiße Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black-final1" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Sofern Kugeln beider Farben auf dem Spielfeld liegen, hat man die Möglichkeit, eine gegnerische Kugel auf ein benachbartes Feld zu verschieben. Verfürgbare Felder werden Hellblau markiert, die Kugel, umd die es geht Dunkelblau.
+      </div>
+    </div>
+  </section>
+
+    <!-- Neue Slide: Schwarze Kugel wird nach links verschoben -->
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-rotatedE" alt="Weiße Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black-final1" alt="Schwarze Kugel" />
+        <img src="WeißeKugel.png" class="ball ball-white-new" alt="Weiße Kugel" />
+      </div>
+      <div class="text">
+        Unabhänging davon, ob man sich dafür oder dagegen entscheidet, muss man immer eine eigene Kugel platzieren. 
+      </div>
+    </div>
+  </section>
+
+  <!-- Neue finale Slide: 4 weiße rechts, 2 schwarze oben -->
+  <section class="slide">
+    <div class="two-col">
+      <div class="board-wrapper">
+        <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+        <img src="WeißeKugel.png" class="ball ball-white-final1" alt="Weiße Kugel" />
+        <img src="WeißeKugel.png" class="ball ball-white-final2" alt="Weiße Kugel" />
+        <img src="WeißeKugel.png" class="ball ball-white-final3" alt="Weiße Kugel" />
+        <img src="WeißeKugel.png" class="ball ball-white-final4" alt="Weiße Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black-final1" alt="Schwarze Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black-final2" alt="Schwarze Kugel" />
+        <img src="SchwarzeKugel.png" class="ball ball-black-final3" alt="Schwarze Kugel" />
+      </div>
+      <div class="text">
+        Das Spiel endet, wenn sich vier Kugeln einer Farbe in einer Reihe befinden, wobei der entsprechende Spieler gewonnen hat.
+      </div>
+    </div>
+  </section>
+
+<!-- Neue Slide: Schachbrett, keine Viererreihe -->
+<section class="slide">
+<div class="two-col">
+<div class="board-wrapper">
+<img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+<img src="WeißeKugel.png" class="ball ball-white-1" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-1" alt="Schwarze Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-whiteR-2" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-2" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-3" alt="Weiße Kugel" />
+<img src="WeißeKugel.png" class="ball ball-blackR-3" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-4" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-4" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-5" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-5" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-6" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-6" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-7" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-7" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-8" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-8" alt="Schwarze Kugel" />
+</div>
+<div class="text">
+Sollte nachdem alle 16 Kugeln aufgebraucht sind keiner der Spieler eine Reihe vierer Kugeln haben, so wird noch fünfmal gegen den Uhrzeigersinn rotiert.
+</div>
+</div>
+</section>
+
+<!-- Neue Slide: szenario 1 5mal rotiert-->
+<section class="slide">
+<div class="two-col">
+<div class="board-wrapper">
+  <img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-1S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-1S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-2S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-2S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-3S" alt="Weiße Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-black-3S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-4S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-4S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-5S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-5S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-6S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-6S" alt="Schwarze Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-white-7S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-7S" alt="Schwarze Kugel" />
+  <img src="SchwarzeKugel.png" class="ball ball-white-8S" alt="Weiße Kugel" />
+  <img src="WeißeKugel.png" class="ball ball-black-8S" alt="Schwarze Kugel" />
+</div>
+<div class="text">
+Sollte dann immer noch keine Reihe zu Stande kommen...
+</div>
+</div>
+</section>
+
+<!-- Neue Slide: szenario 2 5mal rotiert-->
+<section class="slide">
+<div class="two-col">
+<div class="board-wrapper">
+<img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+<img src="WeißeKugel.png" class="ball ball-white-1S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-1S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-2S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-2S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-3S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-3S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-4S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-4S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-5S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-5S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-6S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-6S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-7S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-7S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-8S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-8S" alt="Schwarze Kugel" />
+</div>
+<div class="text">
+Oder aber beide Spieler eine Reihe haben...
+</div>
+</div>
+</section>
+
+<!-- Neue Slide: Unentschieden-->
+<section class="slide">
+<div class="two-col">
+<div class="board-wrapper">
+<img src="Spielbrettsora.png" alt="Orbito Spielbrett" class="board" />
+<img src="WeißeKugel.png" class="ball ball-white-1S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-1S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-2S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-2S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-3S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-3S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-4S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-4S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-5S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-5S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-6S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-6S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-7S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-7S" alt="Schwarze Kugel" />
+<img src="WeißeKugel.png" class="ball ball-white-8S" alt="Weiße Kugel" />
+<img src="SchwarzeKugel.png" class="ball ball-black-8S" alt="Schwarze Kugel" />
+</div>
+<div class="text">
+Gillt dies als Unentschieden.
+</div>
+</div>
+</section>
+
+<section class="slide">
+  <div class="two-col">
+    
+    <div class="board-wrapper double-image-slide">
+      <img src="new.png" 
+           alt="Bild oben" 
+           class="top-image" />
+      <img src="close.png" 
+           alt="Bild unten" 
+           class="bottom-image" />
+           </div>
+          <div class="text">
+          In jedem Fall hat man nach Spielende die möglichkeit, entweder ein neues Spiel zu starten, oder aber das Spie zu beenden.
+        </div>
+    </div>
+</section>
+
+
+<section class="slide center">
+  <h1>Viel Spaß beim Spielen!</h1>
+  <div class="hint"> </div>
+</section>
+
+
+</div>
+
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+
+document.addEventListener('click', () => {
+if (current >= slides.length - 1) return;
+slides[current].classList.remove('active');
+current += 1;
+slides[current].classList.add('active');
+});
+</script>
+
+
+</body>
+</html>
