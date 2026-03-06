@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -36,27 +37,16 @@
     }
 
     .slide {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-
-  transform: translateY(100%);
-  transition: transform 0.8s ease;
-}
-
-.slide.active {
-  transform: translateY(0%);
-}
-
-.slides {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* wichtig! */
-}
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
 
     .double-image-slide {
   position: relative;
@@ -80,6 +70,13 @@
   top: 0px;           
   left: 15px;          
 }
+
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .center {
       flex-direction: column;
       text-align: center;
@@ -561,24 +558,24 @@ Sollte dann immer noch keine Reihe zu Stande kommen, gilt auch dies als Unentsch
   <h1>Viel Spaß beim Spielen!</h1>
   <div class="hint"> </div>
 </section>
-  
-</div> <!-- Ende .slides -->
+
+
+</div>
+
 
 <script>
-  const slides = document.querySelectorAll('.slide');
-  let current = 0;
+const slides = document.querySelectorAll('.slide');
+let current = 0;
 
-  slides[current].classList.add('active');
 
-  document.addEventListener('click', () => {
-    if (current >= slides.length - 1) return;
-
-    slides[current].classList.remove('active');
-    current++;
-
-    slides[current].classList.add('active');
-  });
+document.addEventListener('click', () => {
+if (current >= slides.length - 1) return;
+slides[current].classList.remove('active');
+current += 1;
+slides[current].classList.add('active');
+});
 </script>
+
 
 </body>
 </html>
