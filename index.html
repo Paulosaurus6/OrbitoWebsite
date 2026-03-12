@@ -10,7 +10,7 @@
     * { box-sizing: border-box; }
 
     @font-face {
-  font-family: "MeinFont";       /* Name, den du im CSS verwenden willst */
+  font-family: "MeinFont";       
   src: url("MeinFont.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -24,10 +24,10 @@
   font-size: 1.7rem;
 
   background-image: url("Bild_für_Rolli.png");
-  background-size: cover;        /* Bild füllt gesamten Bildschirm */
-  background-position: center;   /* Zentriert */
-  background-repeat: no-repeat;  /* Kein Wiederholen */
-  background-attachment: fixed;  /* Bleibt beim Wechsel der Slides fix */
+  background-size: cover;        
+  background-position: center;   
+  background-repeat: no-repeat;  
+  background-attachment: fixed;  
 }
 
     .slides {
@@ -564,16 +564,39 @@ Sollte dann immer noch keine Reihe zu Stande kommen, gilt auch dies als Unentsch
 
 
 <script>
-const slides = document.querySelectorAll('.slide');
-let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
 
+  slides[current].classList.add('active');
 
-document.addEventListener('click', () => {
-if (current >= slides.length - 1) return;
-slides[current].classList.remove('active');
-current += 1;
-slides[current].classList.add('active');
-});
+  function showSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+  }
+
+  document.addEventListener('click', () => {
+    showSlide(current + 1);
+  });
+
+  document.addEventListener('keydown', (event) => {
+
+    if (event.key === "ArrowRight") {
+      showSlide(current + 1);
+    }
+
+    if (event.key === "ArrowLeft") {
+      showSlide(current - 1);
+    }
+
+    if (event.code === "Space") {
+      event.preventDefault(); 
+      showSlide(current + 1);
+    }
+
+  });
 </script>
 
 
